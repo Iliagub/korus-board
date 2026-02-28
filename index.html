@@ -6,7 +6,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<title>KORUS Market</title>
+<title>KORLINK Market</title>
 
 <style>
 body{
@@ -16,17 +16,38 @@ body{
   color:#1F2937;
 }
 
-.container{
+.wrapper{
+  max-width:480px;
+  margin:0 auto;
   padding:20px;
 }
 
-h1{
-  font-size:22px;
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.logo-circle{
+  width:34px;
+  height:34px;
+  background:#00AA5B;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
   font-weight:700;
-  margin-bottom:5px;
+}
+
+h1{
+  font-size:20px;
+  margin:0;
 }
 
 .subtitle{
+  font-size:13px;
   color:#6B7280;
   margin-bottom:20px;
 }
@@ -36,15 +57,20 @@ button{
   padding:14px;
   margin:8px 0;
   border:none;
-  border-radius:12px;
-  font-size:16px;
+  border-radius:14px;
+  font-size:15px;
   font-weight:600;
   cursor:pointer;
+  transition:0.2s ease;
 }
 
 .primary{
   background:#00AA5B;
   color:white;
+}
+
+.primary:hover{
+  background:#00894A;
 }
 
 .secondary{
@@ -55,65 +81,89 @@ button{
 .card{
   background:white;
   padding:15px;
-  border-radius:14px;
+  border-radius:16px;
   margin:10px 0;
-  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
 }
 
 .category{
   font-size:12px;
   font-weight:600;
   color:#00AA5B;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
 input, textarea, select{
   width:100%;
   padding:12px;
   margin:8px 0;
-  border-radius:10px;
+  border-radius:12px;
   border:1px solid #E5E7EB;
   font-size:14px;
+}
+
+.footer{
+  margin-top:30px;
+  font-size:12px;
+  color:#6B7280;
+  text-align:center;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
+
+<div class="wrapper">
 
 <div id="home">
-  <h1>KORUS Market</h1>
-  <div class="subtitle">Локальный маркетплейс сообщества</div>
 
-  <button class="secondary" onclick="showCategory('Работа')">💼 Работа</button>
-  <button class="secondary" onclick="showCategory('Жильё')">🏠 Жильё</button>
-  <button class="secondary" onclick="showCategory('Продам')">🛒 Продам</button>
-  <button class="secondary" onclick="showCategory('Услуги')">🧰 Услуги</button>
+<div class="logo">
+  <div class="logo-circle">K</div>
+  <div>
+    <h1>KORLINK Market</h1>
+  </div>
+</div>
 
-  <button class="primary" onclick="showForm()">➕ Разместить объявление</button>
+<div class="subtitle">
+Локальный маркетплейс русскоязычного сообщества в Южной Корее
+</div>
+
+<button class="secondary" onclick="showCategory('Работа')">💼 Работа</button>
+<button class="secondary" onclick="showCategory('Жильё')">🏠 Жильё</button>
+<button class="secondary" onclick="showCategory('Продам')">🛒 Продам</button>
+<button class="secondary" onclick="showCategory('Услуги')">🧰 Услуги</button>
+
+<button class="primary" onclick="showForm()">➕ Разместить объявление</button>
+
 </div>
 
 <div id="form" style="display:none;">
-  <h1>Новое объявление</h1>
+<h1>Новое объявление</h1>
 
-  <select id="category">
-    <option value="Работа">Работа</option>
-    <option value="Жильё">Жильё</option>
-    <option value="Продам">Продам</option>
-    <option value="Услуги">Услуги</option>
-  </select>
+<select id="category">
+<option value="Работа">Работа</option>
+<option value="Жильё">Жильё</option>
+<option value="Продам">Продам</option>
+<option value="Услуги">Услуги</option>
+</select>
 
-  <input id="title" placeholder="Заголовок">
-  <textarea id="text" placeholder="Описание"></textarea>
+<input id="title" placeholder="Заголовок">
+<textarea id="text" placeholder="Описание"></textarea>
 
-  <button class="primary" onclick="saveAd()">Сохранить</button>
-  <button class="secondary" onclick="goHome()">Назад</button>
+<button class="primary" onclick="saveAd()">Опубликовать</button>
+<button class="secondary" onclick="goHome()">Назад</button>
 </div>
 
 <div id="list" style="display:none;">
-  <h1 id="categoryTitle"></h1>
-  <div id="ads"></div>
-  <button class="secondary" onclick="goHome()">Назад</button>
+<h1 id="categoryTitle"></h1>
+<div id="ads"></div>
+<button class="secondary" onclick="goHome()">Назад</button>
+</div>
+
+<div class="footer">
+KORLINK Market — частные объявления без посредников.<br>
+Без спама. Напрямую между людьми.<br><br>
+© 2026 KORLINK
 </div>
 
 </div>
@@ -147,7 +197,7 @@ function saveAd(){
     title,
     text,
     userId:user?.id || null,
-    userName:user?.first_name || "Аноним"
+    userName:user?.first_name || "Пользователь"
   });
 
   localStorage.setItem('ads',JSON.stringify(ads));
@@ -160,10 +210,10 @@ function showCategory(name){
   list.style.display='block';
   categoryTitle.innerText=name;
 
-  let ads=JSON.parse(localStorage.getItem('ads'))||[];
+  let data=JSON.parse(localStorage.getItem('ads'))||[];
   let html='';
 
-  ads.filter(ad=>ad.category===name).forEach(ad=>{
+  data.filter(ad=>ad.category===name).forEach(ad=>{
     html+=`
       <div class="card">
         <div class="category">${ad.category}</div>
@@ -174,7 +224,7 @@ function showCategory(name){
     `;
   });
 
-  ads.innerHTML=html;
+  document.getElementById('ads').innerHTML=html;
 }
 </script>
 
