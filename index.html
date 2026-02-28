@@ -30,16 +30,70 @@
 
 <h2>KORUS Board<br>Русская доска объявлений</h2>
 
-<button>💼 Работа</button>
-<button>🏠 Жильё</button>
-<button>🛒 Продам</button>
-<button>🧰 Услуги</button>
-<button>➕ Разместить объявление</button>
+<div id="home">
+  <button onclick="showCategory('Работа')">💼 Работа</button>
+  <button onclick="showCategory('Жильё')">🏠 Жильё</button>
+  <button onclick="showCategory('Продам')">🛒 Продам</button>
+  <button onclick="showCategory('Услуги')">🧰 Услуги</button>
+  <button onclick="showForm()">➕ Разместить объявление</button>
+</div>
+
+<div id="form" style="display:none;">
+  <h3>Новое объявление</h3>
+  <input id="title" placeholder="Заголовок" style="width:100%; padding:10px; margin:5px 0;">
+  <textarea id="text" placeholder="Описание" style="width:100%; padding:10px; margin:5px 0;"></textarea>
+  <button onclick="saveAd()">Сохранить</button>
+  <button onclick="goHome()">Назад</button>
+</div>
+
+<div id="list" style="display:none;">
+  <h3 id="categoryTitle"></h3>
+  <div id="ads"></div>
+  <button onclick="goHome()">Назад</button>
+</div>
 
 <script>
   const tg = window.Telegram.WebApp;
   tg.expand();
+
+  function showForm(){
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('form').style.display = 'block';
+  }
+
+  function goHome(){
+    document.getElementById('home').style.display = 'block';
+    document.getElementById('form').style.display = 'none';
+    document.getElementById('list').style.display = 'none';
+  }
+
+  function saveAd(){
+    const title = document.getElementById('title').value;
+    const text = document.getElementById('text').value;
+
+    let ads = JSON.parse(localStorage.getItem('ads')) || [];
+    ads.push({title, text});
+    localStorage.setItem('ads', JSON.stringify(ads));
+
+    alert('Объявление сохранено');
+    goHome();
+  }
+
+  function showCategory(name){
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('list').style.display = 'block';
+    document.getElementById('categoryTitle').innerText = name;
+
+    let ads = JSON.parse(localStorage.getItem('ads')) || [];
+    let html = '';
+    ads.forEach(ad => {
+      html += `<div style="background:white;padding:10px;margin:10px 0;border-radius:8px;">
+        <b>${ad.title}</b><br>${ad.text}
+      </div>`;
+    });
+
+    document.getElementById('ads').innerHTML = html;
+  }
 </script>
 
 </body>
-</html>
