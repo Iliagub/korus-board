@@ -1,99 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <title>KORUS Board</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-    h2 {
-      text-align: center;
-    }
-    button {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      background: #2AABEE;
-      color: white;
-    }
-  </style>
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<h2>KORUS Board<br>Русская доска объявлений</h2>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<title>KORUS Market</title>
+
+<style>
+body{
+  margin:0;
+  background:#F5F7F9;
+  font-family:'Inter', sans-serif;
+  color:#1F2937;
+}
+
+.container{
+  padding:20px;
+}
+
+h1{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.subtitle{
+  color:#6B7280;
+  margin-bottom:20px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.primary{
+  background:#00AA5B;
+  color:white;
+}
+
+.secondary{
+  background:white;
+  border:1px solid #E5E7EB;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:14px;
+  margin:10px 0;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.category{
+  font-size:12px;
+  font-weight:600;
+  color:#00AA5B;
+  margin-bottom:5px;
+}
+
+input, textarea, select{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #E5E7EB;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
 
 <div id="home">
-  <button onclick="showCategory('Работа')">💼 Работа</button>
-  <button onclick="showCategory('Жильё')">🏠 Жильё</button>
-  <button onclick="showCategory('Продам')">🛒 Продам</button>
-  <button onclick="showCategory('Услуги')">🧰 Услуги</button>
-  <button onclick="showForm()">➕ Разместить объявление</button>
+  <h1>KORUS Market</h1>
+  <div class="subtitle">Локальный маркетплейс сообщества</div>
+
+  <button class="secondary" onclick="showCategory('Работа')">💼 Работа</button>
+  <button class="secondary" onclick="showCategory('Жильё')">🏠 Жильё</button>
+  <button class="secondary" onclick="showCategory('Продам')">🛒 Продам</button>
+  <button class="secondary" onclick="showCategory('Услуги')">🧰 Услуги</button>
+
+  <button class="primary" onclick="showForm()">➕ Разместить объявление</button>
 </div>
 
 <div id="form" style="display:none;">
-  <h3>Новое объявление</h3>
-  <input id="title" placeholder="Заголовок" style="width:100%; padding:10px; margin:5px 0;">
-  <textarea id="text" placeholder="Описание" style="width:100%; padding:10px; margin:5px 0;"></textarea>
-  <button onclick="saveAd()">Сохранить</button>
-  <button onclick="goHome()">Назад</button>
+  <h1>Новое объявление</h1>
+
+  <select id="category">
+    <option value="Работа">Работа</option>
+    <option value="Жильё">Жильё</option>
+    <option value="Продам">Продам</option>
+    <option value="Услуги">Услуги</option>
+  </select>
+
+  <input id="title" placeholder="Заголовок">
+  <textarea id="text" placeholder="Описание"></textarea>
+
+  <button class="primary" onclick="saveAd()">Сохранить</button>
+  <button class="secondary" onclick="goHome()">Назад</button>
 </div>
 
 <div id="list" style="display:none;">
-  <h3 id="categoryTitle"></h3>
+  <h1 id="categoryTitle"></h1>
   <div id="ads"></div>
-  <button onclick="goHome()">Назад</button>
+  <button class="secondary" onclick="goHome()">Назад</button>
+</div>
+
 </div>
 
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.expand();
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-  function showForm(){
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('form').style.display = 'block';
-  }
+const user = tg.initDataUnsafe?.user;
 
-  function goHome(){
-    document.getElementById('home').style.display = 'block';
-    document.getElementById('form').style.display = 'none';
-    document.getElementById('list').style.display = 'none';
-  }
+function showForm(){
+  home.style.display='none';
+  form.style.display='block';
+}
 
-  function saveAd(){
-    const title = document.getElementById('title').value;
-    const text = document.getElementById('text').value;
+function goHome(){
+  home.style.display='block';
+  form.style.display='none';
+  list.style.display='none';
+}
 
-    let ads = JSON.parse(localStorage.getItem('ads')) || [];
-    ads.push({title, text});
-    localStorage.setItem('ads', JSON.stringify(ads));
+function saveAd(){
+  const category=document.getElementById('category').value;
+  const title=document.getElementById('title').value;
+  const text=document.getElementById('text').value;
 
-    alert('Объявление сохранено');
-    goHome();
-  }
+  let ads=JSON.parse(localStorage.getItem('ads'))||[];
 
-  function showCategory(name){
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('list').style.display = 'block';
-    document.getElementById('categoryTitle').innerText = name;
+  ads.push({
+    category,
+    title,
+    text,
+    userId:user?.id || null,
+    userName:user?.first_name || "Аноним"
+  });
 
-    let ads = JSON.parse(localStorage.getItem('ads')) || [];
-    let html = '';
-    ads.forEach(ad => {
-      html += `<div style="background:white;padding:10px;margin:10px 0;border-radius:8px;">
-        <b>${ad.title}</b><br>${ad.text}
-      </div>`;
-    });
+  localStorage.setItem('ads',JSON.stringify(ads));
+  alert("Объявление опубликовано");
+  goHome();
+}
 
-    document.getElementById('ads').innerHTML = html;
-  }
+function showCategory(name){
+  home.style.display='none';
+  list.style.display='block';
+  categoryTitle.innerText=name;
+
+  let ads=JSON.parse(localStorage.getItem('ads'))||[];
+  let html='';
+
+  ads.filter(ad=>ad.category===name).forEach(ad=>{
+    html+=`
+      <div class="card">
+        <div class="category">${ad.category}</div>
+        <b>${ad.title}</b><br><br>
+        ${ad.text}<br><br>
+        <small>Автор: ${ad.userName}</small>
+      </div>
+    `;
+  });
+
+  ads.innerHTML=html;
+}
 </script>
 
 </body>
+</html>
