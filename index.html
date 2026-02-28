@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>KORUS Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h2 {
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #2AABEE;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<h2>KORUS Board<br>Русская доска объявлений</h2>
+
+<button>💼 Работа</button>
+<button>🏠 Жильё</button>
+<button>🛒 Продам</button>
+<button>🧰 Услуги</button>
+<button>➕ Разместить объявление</button>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand();
+</script>
+
+</body>
+</html>
